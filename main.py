@@ -32,8 +32,12 @@ async def websocket_endpoint(websocket: WebSocket, room_id: str, client_id: str)
         while True:
             data = await websocket.receive_text()
             for peer_id, connection in rooms[room_id].items():
-                if peer_id != client_id:
-                    await connection.send_text(data)
+                if "target_id" in data:
+                    if peer_id == data["target_id"]:
+                        await connection.send_text(data)
+                else:
+                    if peer_id != client_id:
+                        await connection.send_text(data)
 
     except WebSocketDisconnect:
         print(f"Client disconnected: {client_id}, room: " +
