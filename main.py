@@ -32,8 +32,7 @@ async def websocket_endpoint(websocket: WebSocket, room_id: str, client_id: str)
                     await connection.send_text(data)
 
     except WebSocketDisconnect:
-        print(f"Client disconnected: {client_id}, room: {
-              room_id}, IP: {client_ip}")
+        print(f"Client disconnected: {client_id}, room: {room_id}, IP: {client_ip}")
     except Exception as e:
         print(f"Error with client {client_id} in room {room_id}: {e}")
     finally:
