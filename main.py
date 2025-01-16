@@ -25,9 +25,9 @@ async def websocket_endpoint(websocket: WebSocket, room_id: str, client_id: str)
         for peer_id, connection in rooms[room_id].items():
             if peer_id != client_id:
                 await websocket.send_json({"type": "create_offer",
-                                           "client_id": client_id})
+                                           "client_id": peer_id})
                 offer = await websocket.receive_json()
-                offer["client_id"] = peer_id
+                offer["client_id"] = client_id
                 await connection.send_json(offer)
         while True:
             data = await websocket.receive_text()
