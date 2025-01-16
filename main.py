@@ -22,16 +22,15 @@ async def websocket_endpoint(websocket: WebSocket, room_id: str, client_id: str)
     rooms[room_id][client_id] = websocket
 
     try:
-        while True:
-            for peer_id, connection in rooms[room_id].items():
-                if peer_id != client_id:
-                    await websocket.send_text({"type": "create_offer"})
-                    offer = await websocket.receive_text()
-                    await connection.send_text(offer)
-
+        for peer_id, connection in rooms[room_id].items():
+            if peer_id != client_id:
+                await websocket.send_text({"type": "create_offer"})
+                offer = await websocket.receive_text()
+                await connection.send_text(offer)
+        _ = await websocket.receive_text()
     except WebSocketDisconnect:
-        print(f"Client disconnected: {client_id}, room: {
-              room_id}, IP: {client_ip}")
+        print(f"Client disconnected: {client_id}, room: " +
+              f"{room_id}, IP: {client_ip}")
     except Exception as e:
         print(f"Error with client {client_id} in room {room_id}: {e}")
     finally:
