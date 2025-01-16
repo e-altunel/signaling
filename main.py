@@ -24,8 +24,10 @@ async def websocket_endpoint(websocket: WebSocket, room_id: str, client_id: str)
     try:
         for peer_id, connection in rooms[room_id].items():
             if peer_id != client_id:
-                await websocket.send_text({"type": "create_offer"})
+                await websocket.send_json({"type": "create_offer",
+                                           "client_id": client_id})
                 offer = await websocket.receive_text()
+                offer["client_id"] = peer_id
                 await connection.send_text(offer)
         _ = await websocket.receive_text()
     except WebSocketDisconnect:
